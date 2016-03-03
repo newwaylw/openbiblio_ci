@@ -61,7 +61,7 @@ class DmQuery extends Query {
   function getCheckoutStats($mbrid) {
     $MySQLn = explode('.', implode('', explode('-', mysql_get_server_info())));
     if ($MySQLn[0] < '5') {
-        $cmd = 'type=heap';
+        $cmd = 'Engine = Memory';
     } else {
         $cmd = 'engine=memory';
     }
