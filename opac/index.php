@@ -44,7 +44,6 @@ conditions at left).</p>
 check regularly for availability of more titles or contact us for more 
 information.</p>
 <form name="phrasesearch" method="POST" action="../shared/biblio_search.php">
-<br />
 <table class="primary">
   <tr>
     <th valign="top" nowrap="yes" align="left">
@@ -54,15 +53,16 @@ information.</p>
   <tr>
     <td nowrap="true" class="primary">
       <select name="searchType">
+        <option value="keyword"><?php echo $loc->getText("opac_Keyword");?>
         <option value="title" selected><?php echo $loc->getText("opac_Title");?>
         <option value="author"><?php echo $loc->getText("opac_Author");?>
-        <option value="subject"><?php echo $loc->getText("opac_Subject");?>
       </select>
       <input type="text" name="searchText" size="30" maxlength="256">
       <input type="hidden" name="sortBy" value="default">
       <input type="hidden" name="tab" value="<?php echo H($tab); ?>">
       <input type="hidden" name="lookup" value="<?php echo H($lookup); ?>">
       <input type="submit" value="<?php echo $loc->getText("opac_Search");?>" class="button">
+
     </td>
   </tr>
       <!--- edit by w.liu newway.liu@gmail.com -->
@@ -75,54 +75,22 @@ information.</p>
 
   <tr>
     <td align="right" class="primary"><strong>Media Type:</strong></td>
-
     <td class="primary">
-  <!-- w. liu test  -->
-    <?php 
-      $fieldname="materialCd";
-      $domainTable="material_type_dm";
-
-      $dmQ = new DmQuery();
-      $dmQ->connect();
-      $dms = $dmQ->get($domainTable);
-      $dmQ->close();
-      echo "<select id=\"materialCd\" name=\"materialCd\">";
-      echo "<option value=\"".'All'."\" selected";
-      echo ">".'All'."</option>\n";
-      foreach ($dms as $dm) {
-       echo "<option value=\"".H($dm->getCode())."\"";
-       /*
-        if (($materialCd == "") && ($dm->getDefaultFlg() == 'Y')) {
-         $materialCd = $dm->getCode();
-          echo " selected";
-        } elseif ($materialCd == $dm->getCode()) {
-          echo " selected";
-       }
-        */
-       echo ">".H($dm->getDescription())."</option>\n";
-  }
-  echo "</select>\n";
-
-     ?>
-
-
-   <!--- w.liu test --->
-    </td>
+      <!-- w. liu test  -->
+      <?php 
+        printSelectWithAll("materialCd","material_type_dm",$postVars);
+      ?>
   </tr>
+
   <tr>
     <td align="right" class="primary"><strong>Collection:</strong></td>
     <td class="primary">
        <?php 
-         
          printSelectWithAll("collectionCd","collection_dm",$postVars); 
        ?>
     </td>
-
   </tr>
-
-    <!--- end of edit -->
-</table>
+  </table>
 </form>
-  <p>&nbsp;</p>
-<h1>&nbsp; </h1>
+
  <?php include("../shared/footer.php"); ?>

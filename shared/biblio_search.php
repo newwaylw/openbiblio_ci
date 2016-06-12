@@ -107,9 +107,9 @@ function printResultPages(&$loc, $currPage, $pageCount, $sort)
       for ($counter = 1; $counter <= $pageCount; $counter++)
       {
         if ($counter == $currPage)
-          $pagination .= "<span class=\"current\">*$currPage*</span>";
+          $pagination .= "<span class=\"current\"> $currPage </span>";
         else
-          $pagination .="<a href=\"javascript:changePage(".H(addslashes($counter)).",'".H(addslashes($sort))."')\">$counter </a>";         
+          $pagination .="<a href=\"javascript:changePage(".H(addslashes($counter)).",'".H(addslashes($sort))."')\"> $counter </a>";         
       }
     }
     elseif($pageCount >= 10 + ($adjacents * 2)) //enough pages to hide some
@@ -120,43 +120,43 @@ function printResultPages(&$loc, $currPage, $pageCount, $sort)
         for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++)
         {
           if ($counter == $currPage)
-            $pagination .= "<span class=\"current\">$counter</span>";
+            $pagination .= "<span class=\"current\"> $counter </span>";
           else
-            $pagination .= "<a href=\"javascript:changePage(".($counter).",'".$sort."')\">$counter </a>";         
+            $pagination .= "<a href=\"javascript:changePage(".($counter).",'".$sort."')\"> $counter </a>";         
         }
         $pagination .= "<span class=\"elipses\">...</span>";
         $pagination .= "<a href=\"javascript:changePage(".($lpm1).",'".$sort."')\">$lpm1</a>";
-        $pagination .= "<a href=\"javascript:changePage(".($pageCount).",'".$sort."')\">$pageCount </a>";   
+        $pagination .= "<a href=\"javascript:changePage(".($pageCount).",'".$sort."')\"> $pageCount </a>";   
       }
       //in middle; hide some front and some back
       elseif($pageCount - ($adjacents * 2) > $currPage && $currPage > ($adjacents * 2))
       {
-        $pagination .= "<a href=\"javascript:changePage(".(1).",'".$sort."')\">1</a>";
-        $pagination .= "<a href=\"javascript:changePage(".(2).",'".$sort."')\">2</a>";
+        $pagination .= "<a href=\"javascript:changePage(".(1).",'".$sort."')\"> 1 </a>";
+        $pagination .= "<a href=\"javascript:changePage(".(2).",'".$sort."')\"> 2 </a>";
         $pagination .= "<span class=\"elipses\">...</span>";
         for ($counter = $currPage - $adjacents; $counter <= $currPage + $adjacents; $counter++)
         {
           if ($counter == $currPage)
-            $pagination .= "<span class=\"current\">$counter</span>";
+            $pagination .= "<span class=\"current\"> $counter </span>";
           else
-            $pagination .= "<a href=\"javascript:changePage(".($counter).",'".$sort."')\">$counter</a>";         
+            $pagination .= "<a href=\"javascript:changePage(".($counter).",'".$sort."')\"> $counter </a>";         
         }
         $pagination .= "...";
         $pagination .= "<a href=\"javascript:changePage(".($lpm1).",'".$sort."')\">$lpm1</a>";
-        $pagination .= "<a href=\"javascript:changePage(".($pageCount).",'".$sort."')\">$pageCount</a>";   
+        $pagination .= "<a href=\"javascript:changePage(".($pageCount).",'".$sort."')\"> $pageCount </a>";   
       }
       //close to end; only hide early pages
       else
       {
-        $pagination .= "<a href=\"javascript:changePage(".(1).",'".$sort."')\">1</a>";
-        $pagination .= "<a href=\"javascript:changePage(".(2).",'".$sort."')\">2</a>";
+        $pagination .= "<a href=\"javascript:changePage(".(1).",'".$sort."')\"> 1 </a>";
+        $pagination .= "<a href=\"javascript:changePage(".(2).",'".$sort."')\"> 2 </a>";
         $pagination .= "<span class=\"elipses\">...</span>";
         for ($counter = $pageCount - (1 + ($adjacents * 3)); $counter <= $pageCount; $counter++)
         {
           if ($counter == $currPage)
-            $pagination .= "<span class=\"current\">$counter</span>";
+            $pagination .= "<span class=\"current\"> $counter </span>";
           else
-            $pagination .= "<a href=\"javascript:changePage(".($counter).",'".$sort."')\">$counter</a>";         
+            $pagination .= "<a href=\"javascript:changePage(".($counter).",'".$sort."')\"> $counter </a>";         
         }
       }
     }
@@ -212,26 +212,22 @@ function printResultPages(&$loc, $currPage, $pageCount, $sort)
     $words = explodeQuoted($searchText);
     if ($searchType == "author") {
       $sType = OBIB_SEARCH_AUTHOR;
-    } elseif ($searchType == "subject") {
-      $sType = OBIB_SEARCH_SUBJECT;
-    } elseif ($searchType == "callno") {
-      $sType = OBIB_SEARCH_CALLNO;
-    } elseif ($searchType == "keyword") {
-      $sType = OBIB_SEARCH_KEYWORD;
-    } else {
+    } elseif ($searchType == "title") {
       $sType = OBIB_SEARCH_TITLE;
+    } else {
+      $sType = OBIB_SEARCH_KEYWORD;
     }
   }
 
   //Wei Liu newway edit
-  if(isset($_GET['materialCd'])){
-    $materialCd = $_GET['materialCd'];
+  if(isset($_POST['materialCd'])){
+    $materialCd = $_POST['materialCd'];
   }else{
     $materialCd = 'all';
   }
 
-  if(isset($_GET['collectionCd'])){
-    $collectionCd = $_GET['collectionCd'];
+  if(isset($_POST['collectionCd'])){
+    $collectionCd = $_POST['collectionCd'];
   }else{
     $collectionCd = 'all';
   }
@@ -251,7 +247,7 @@ function printResultPages(&$loc, $currPage, $pageCount, $sort)
   } else {
     $opacFlg = false;
   }
-  if (!$biblioQ->search2($sType,$materialCd, $collectionCd, $words,$currentPageNmbr,$sortBy,$opacFlg)) {
+  if (!$biblioQ->search2($sType, $materialCd, $collectionCd, $words,$currentPageNmbr,$sortBy,$opacFlg)) {
     $biblioQ->close();
     displayErrorPage($biblioQ);
   }
@@ -403,6 +399,10 @@ function changePage(page,sort)
         <tr>
           <td class="noborder" valign="top"><b><?php echo $loc->getText("biblioSearchAuthor"); ?>:</b></td>
           <td class="noborder" colspan="3"><?php if ($biblio->getAuthor() != "") echo H($biblio->getAuthor());?></td>
+        </tr>
+        <tr>
+          <td class="noborder" valign="top"><font class="small"><b><?php echo $loc->getText("biblioSearchLanguage"); ?>:</b></font></td>
+          <td class="noborder" colspan="3"><font class="small"><?php echo H($biblio->getLanguage());?></font></td>
         </tr>
         <tr>
           <td class="noborder" valign="top"><font class="small"><b><?php echo $loc->getText("biblioSearchMaterial"); ?>:</b></font></td>

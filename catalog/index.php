@@ -56,7 +56,6 @@
       <select name="searchType">
         <option value="title" selected><?php echo $loc->getText("indexTitle");?>
         <option value="author"><?php echo $loc->getText("indexAuthor");?>
-        <option value="subject"><?php echo $loc->getText("indexSubject");?>
       </select>
       <input type="text" name="searchText" size="30" maxlength="256">
       <input type="hidden" name="sortBy" value="default">
@@ -75,50 +74,20 @@
     <td align="right" class="primary"><strong>Media Type:</strong></td>
 
     <td class="primary">
-  <!-- w. liu test  -->
-    <?php 
-      $fieldname="materialCd";
-      $domainTable="material_type_dm";
-
-      $dmQ = new DmQuery();
-      $dmQ->connect();
-      $dms = $dmQ->get($domainTable);
-      $dmQ->close();
-      echo "<select id=\"materialCd\" name=\"materialCd\">";
-      echo "<option value=\"".'All'."\" selected";
-      echo ">".'All'."</option>\n";
-      foreach ($dms as $dm) {
-       echo "<option value=\"".H($dm->getCode())."\"";
-       /*
-        if (($materialCd == "") && ($dm->getDefaultFlg() == 'Y')) {
-         $materialCd = $dm->getCode();
-          echo " selected";
-        } elseif ($materialCd == $dm->getCode()) {
-          echo " selected";
-       }
-        */
-       echo ">".H($dm->getDescription())."</option>\n";
-  }
-  echo "</select>\n";
-
-     ?>
-
-
-   <!--- w.liu test --->
-    </td>
+      <!-- w. liu test  -->
+      <?php 
+        printSelectWithAll("materialCd","material_type_dm",$postVars);
+      ?>
   </tr>
+
   <tr>
     <td align="right" class="primary"><strong>Collection:</strong></td>
     <td class="primary">
        <?php 
-         
          printSelectWithAll("collectionCd","collection_dm",$postVars); 
        ?>
     </td>
-
   </tr>
-
-    <!--- end of edit -->
 </table>
 </form>
 

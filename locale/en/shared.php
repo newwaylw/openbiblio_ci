@@ -87,6 +87,7 @@ $trans["biblioSearchAuthor"]       = "\$text = 'Author';";
 $trans["biblioSearchMaterial"]     = "\$text = 'Material';";
 $trans["biblioSearchCollection"]   = "\$text = 'Collection';";
 $trans["biblioSearchCall"]         = "\$text = 'Call Number';";
+$trans["biblioSearchLanguage"]    = "\$text = 'Language';";
 $trans["biblioSearchCopyBCode"]    = "\$text = 'Copy Barcode';";
 $trans["biblioSearchCopyStatus"]   = "\$text = 'Status';";
 $trans["biblioSearchNoCopies"]     = "\$text = 'No copies are available.';";
