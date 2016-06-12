@@ -42,7 +42,7 @@
   #****************************************************************************
   #*  Function declaration only used on this page.
   #****************************************************************************
-  function printResultPages(&$loc, $currPage, $pageCount, $sort) {
+  function printResultPages_bak(&$loc, $currPage, $pageCount, $sort) {
     if ($pageCount <= 1) {
       return false;
     }
@@ -63,9 +63,115 @@
       }
     }
     if ($currPage < $pageCount) {
-      echo "<a href=\"javascript:changePage(".($currPage+1).",'".$sort."')\">".$loc->getText("biblioSearchNext")."&raquo;</a> ";
+      echo "<a href=\"javascript:changePage(".($currPage+1).",'".$sort."')\">".$loc->getText("biblioSearchNext")."&raquo;</a> $currPage , $pageCount";
     }
   }
+
+//function to 
+function printResultPages(&$loc, $currPage, $pageCount, $sort)
+{   
+  
+  //other vars
+  $prev = $currPage - 1;                  //previous page is page - 1
+  $next = $currPage + 1;                  //next page is page + 1
+  $lpm1 = $pageCount - 1;                //last page minus 1
+  $adjacents = 1;
+  /* 
+    Now we apply our rules and draw the pagination object. 
+    We're actually saving the code to a variable in case we want to draw it more than once.
+  */
+  $pagination = "";
+  if($pageCount > 1)
+  { 
+    $pagination .= "<div class=\"pagination\"";
+    if($margin || $padding)
+    {
+      $pagination .= " style=\"";
+      if($margin)
+        $pagination .= "margin: $margin;";
+      if($padding)
+        $pagination .= "padding: $padding;";
+      $pagination .= "\"";
+    }
+    $pagination .= ">";
+
+    //previous button
+    if ($currPage > 1) 
+      $pagination .= "<a href=\"javascript:changePage(".H(addslashes($prev)).",'".H(addslashes($sort))."')\">prev</a>";
+    else
+      $pagination .= "<span class=\"disabled\">prev</span>";  
+    
+    //pages 
+    if ($pageCount < 10 + ($adjacents * 2)) //not enough pages to bother breaking it up
+    { 
+      for ($counter = 1; $counter <= $pageCount; $counter++)
+      {
+        if ($counter == $currPage)
+          $pagination .= "<span class=\"current\">*$currPage*</span>";
+        else
+          $pagination .="<a href=\"javascript:changePage(".H(addslashes($counter)).",'".H(addslashes($sort))."')\">$counter </a>";         
+      }
+    }
+    elseif($pageCount >= 10 + ($adjacents * 2)) //enough pages to hide some
+    {
+      //close to beginning; only hide later pages
+      if($currPage < 1 + ($adjacents * 3))    
+      {
+        for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++)
+        {
+          if ($counter == $currPage)
+            $pagination .= "<span class=\"current\">$counter</span>";
+          else
+            $pagination .= "<a href=\"javascript:changePage(".($counter).",'".$sort."')\">$counter </a>";         
+        }
+        $pagination .= "<span class=\"elipses\">...</span>";
+        $pagination .= "<a href=\"javascript:changePage(".($lpm1).",'".$sort."')\">$lpm1</a>";
+        $pagination .= "<a href=\"javascript:changePage(".($pageCount).",'".$sort."')\">$pageCount </a>";   
+      }
+      //in middle; hide some front and some back
+      elseif($pageCount - ($adjacents * 2) > $currPage && $currPage > ($adjacents * 2))
+      {
+        $pagination .= "<a href=\"javascript:changePage(".(1).",'".$sort."')\">1</a>";
+        $pagination .= "<a href=\"javascript:changePage(".(2).",'".$sort."')\">2</a>";
+        $pagination .= "<span class=\"elipses\">...</span>";
+        for ($counter = $currPage - $adjacents; $counter <= $currPage + $adjacents; $counter++)
+        {
+          if ($counter == $currPage)
+            $pagination .= "<span class=\"current\">$counter</span>";
+          else
+            $pagination .= "<a href=\"javascript:changePage(".($counter).",'".$sort."')\">$counter</a>";         
+        }
+        $pagination .= "...";
+        $pagination .= "<a href=\"javascript:changePage(".($lpm1).",'".$sort."')\">$lpm1</a>";
+        $pagination .= "<a href=\"javascript:changePage(".($pageCount).",'".$sort."')\">$pageCount</a>";   
+      }
+      //close to end; only hide early pages
+      else
+      {
+        $pagination .= "<a href=\"javascript:changePage(".(1).",'".$sort."')\">1</a>";
+        $pagination .= "<a href=\"javascript:changePage(".(2).",'".$sort."')\">2</a>";
+        $pagination .= "<span class=\"elipses\">...</span>";
+        for ($counter = $pageCount - (1 + ($adjacents * 3)); $counter <= $pageCount; $counter++)
+        {
+          if ($counter == $currPage)
+            $pagination .= "<span class=\"current\">$counter</span>";
+          else
+            $pagination .= "<a href=\"javascript:changePage(".($counter).",'".$sort."')\">$counter</a>";         
+        }
+      }
+    }
+    
+    //next button
+    if ($currPage < $counter - 1) 
+      $pagination .= "<a href=\"javascript:changePage(".($next).",'".$sort."')\">next </a>";
+    else
+      $pagination .= "<span class=\"disabled\">next </span>";
+    $pagination .= "</div>\n";
+  }
+  
+  echo "$pagination" ;
+
+}
 
   #****************************************************************************
   #*  Loading a few domain tables into associative arrays
